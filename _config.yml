@@ -3,10 +3,10 @@
 # ----------------------- #
 
 url: http://ea.github.io
-title: My Octopress Blog
-subtitle: A blogging framework for hackers.
-author: Your Name
-simple_search: http://google.com/search
+title: "ea's blag" 
+subtitle: A place to document what I do.
+author: ea
+simple_search: https://duckduckgo.com/?q=duckduckgo&sites=ea.github.io
 description:
 
 # Default date format is "ordinal" (resulting in "July 22nd 2007")
