@@ -5,12 +5,23 @@
 <!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <title>Testing testing 1 - ea's blag</title>
+  <title>Testing 1,2,3 - ea's blag</title>
   <meta name="author" content="ea">
 
   
-  <meta name="description" content="test test 1,2,3
-">
+  <meta name="description" content="Lets see how this blaging thing works. Small shellcode1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+main: pop %edx pop %esp
+l: pop %eax pop %ebx xchg %eax,%esp cmp $ &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -69,7 +80,7 @@
   
   <header>
     
-      <h1 class="entry-title">Testing Testing 1</h1>
+      <h1 class="entry-title">Testing 1,2,3</h1>
     
     
       <p class="meta">
@@ -92,7 +103,52 @@
   </header>
 
 
-<div class="entry-content"><p>test test 1,2,3</p>
+<div class="entry-content"><p>Lets see how this blaging thing works.</p>
+
+<figure class='code'><figcaption><span>Small shellcode</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+</pre></td><td class='code'><pre><code class='nasm'><span class='line'><span class="nl">main:</span>
+</span><span class='line'>   <span class="nf">pop</span> <span class="o">%</span><span class="nb">edx</span>
+</span><span class='line'>   <span class="nf">pop</span> <span class="o">%</span><span class="nb">esp</span>
+</span><span class='line'><span class="nl">l:</span>
+</span><span class='line'>   <span class="nf">pop</span> <span class="o">%</span><span class="nb">eax</span>
+</span><span class='line'>   <span class="nf">pop</span> <span class="o">%</span><span class="nb">ebx</span>
+</span><span class='line'>   <span class="nf">xchg</span> <span class="o">%</span><span class="nb">eax</span><span class="p">,</span><span class="o">%</span><span class="nb">esp</span>
+</span><span class='line'>   <span class="nf">cmp</span> <span class="kc">$</span><span class="mh">0x41414100</span><span class="p">,</span><span class="o">%</span><span class="nb">ebx</span>
+</span><span class='line'>   <span class="nf">jne</span> <span class="nv">l</span>
+</span><span class='line'>   <span class="nf">push</span> <span class="o">%</span><span class="nb">edx</span>
+</span><span class='line'>   <span class="nf">ret</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>What if I change this now?</p>
+
+<p>Kewl beans&hellip;</p>
+
+<p>Lets see some more code highlights!</p>
+
+<figure class='code'><figcaption><span>Hello world</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='c'><span class='line'><span class="n">main</span><span class="p">(</span><span class="kt">int</span> <span class="n">argc</span><span class="p">,</span> <span class="kt">char</span> <span class="o">**</span><span class="n">argv</span><span class="p">){</span>
+</span><span class='line'>    <span class="n">printf</span><span class="p">(</span><span class="s">&quot;Hello world!</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">);</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Ok how about an image?</p>
+
+<p><img src="images/antenna.jpg" width="1350" height="1050" title="HF antenna" >
+Home made hf antenna</p>
 </div>
 
 
@@ -144,7 +200,7 @@
   <ul id="recent_posts">
     
       <li class="post">
-        <a href="/blog/2013/09/14/testing-testing-1/">Testing Testing 1</a>
+        <a href="/blog/2013/09/14/testing-testing-1/">Testing 1,2,3</a>
       </li>
     
   </ul>
