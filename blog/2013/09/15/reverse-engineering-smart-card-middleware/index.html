@@ -1,24 +1,99 @@
-<?xml version="1.0" encoding="utf-8"?>
-<feed xmlns="http://www.w3.org/2005/Atom">
 
-  <title><![CDATA[ea's blag]]></title>
-  <link href="http://ea.github.io/atom.xml" rel="self"/>
-  <link href="http://ea.github.io/"/>
-  <updated>2013-09-15T01:28:10+02:00</updated>
-  <id>http://ea.github.io/</id>
-  <author>
-    <name><![CDATA[ea]]></name>
-    
-  </author>
-  <generator uri="http://octopress.org/">Octopress</generator>
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>Smart card middleware reversing tricks - ea's blag</title>
+  <meta name="author" content="ea">
 
   
-  <entry>
-    <title type="html"><![CDATA[Smart card middleware reversing tricks]]></title>
-    <link href="http://ea.github.io/blog/2013/09/15/reverse-engineering-smart-card-middleware/"/>
-    <updated>2013-09-15T00:30:00+02:00</updated>
-    <id>http://ea.github.io/blog/2013/09/15/reverse-engineering-smart-card-middleware</id>
-    <content type="html"><![CDATA[<p>In order for a smart card to be usable by a third party application, a vendor-supplied
+  <meta name="description" content="In order for a smart card to be usable by a third party application, a vendor-supplied
+driver or a middleware needs to be available. On the Windows &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://ea.github.io/blog/2013/09/15/reverse-engineering-smart-card-middleware">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="ea's blag" type="application/atom+xml">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/lib/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+
+  
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">ea's blag</a></h1>
+  
+    <h2>Too much technology, in too little time...</h2>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="https://encrypted.google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:ea.github.io" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+  <li><a href="/about">About</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">Smart Card Middleware Reversing Tricks</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-09-15T00:30:00+02:00" pubdate data-updated="true">Sep 15<span>th</span>, 2013</time>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><p>In order for a smart card to be usable by a third party application, a vendor-supplied
 driver or a middleware needs to be available. On the Windows platform, a smart card
 middleware must follow the <a href="http://msdn.microsoft.com/en-us/windows/hardware/gg487500.aspx">Windows Smart Card Minidriver specification</a> which is
 designed to present a consistent interface to the card. This is not always the case,
@@ -48,7 +123,7 @@ represented by the series of the pointer assignment operations to the appropriat
 offsets into the <em><a href="http://msdn.microsoft.com/en-us/library/dd627628%28v=vs.85%29.aspx">CARD_DATA</a></em> structure. By loadin apropriate C header file
 for <em>CARD_DATA</em> structure in IDA, it will be able to determine the locations of
 specific functions:
-<img src="http://ea.github.io/images/scard_data.png"></p>
+<img src="/images/scard_data.png"></p>
 
 <p>From this, we can clearly determine what each function does (at least on the)
 high level.</p>
@@ -130,7 +205,125 @@ Repackaging the sniffed data into something that Wireshark can eat would be
 useful but I&rsquo;ll leave that for the next time.</p>
 
 <p>Peace out</p>
-]]></content>
-  </entry>
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
   
-</feed>
+
+<span class="byline author vcard">Posted by <span class="fn">ea</span></span>
+
+      
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-09-15T00:30:00+02:00" pubdate data-updated="true">Sep 15<span>th</span>, 2013</time>
+      
+
+<span class="categories">
+  
+    <a class='category' href='/blog/categories/re/'>re</a>
+  
+</span>
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  
+  
+</div>
+
+    
+    <p class="meta">
+      
+      
+    </p>
+  </footer>
+</article>
+
+</div>
+
+<aside class="sidebar">
+  
+    <section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2013/09/15/reverse-engineering-smart-card-middleware/">Smart Card Middleware Reversing Tricks</a>
+      </li>
+    
+  </ul>
+</section>
+
+<section>
+  <h1>GitHub Repos</h1>
+  <ul id="gh_repos">
+    <li class="loading">Status updating...</li>
+  </ul>
+  
+  <a href="https://github.com/ea">@ea</a> on GitHub
+  
+  <script type="text/javascript">
+    $(document).ready(function(){
+        if (!window.jXHR){
+            var jxhr = document.createElement('script');
+            jxhr.type = 'text/javascript';
+            jxhr.src = '/javascripts/libs/jXHR.js';
+            var s = document.getElementsByTagName('script')[0];
+            s.parentNode.insertBefore(jxhr, s);
+        }
+
+        github.showRepos({
+            user: 'ea',
+            count: 10,
+            skip_forks: true,
+            target: '#gh_repos'
+        });
+    });
+  </script>
+  <script src="/javascripts/github.js" type="text/javascript"> </script>
+</section>
+
+
+
+
+
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2013 - ea -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+
+
+
+
+
+
+
+
+
+
+</body>
+</html>

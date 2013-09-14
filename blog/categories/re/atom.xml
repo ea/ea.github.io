@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <feed xmlns="http://www.w3.org/2005/Atom">
 
-  <title><![CDATA[ea's blag]]></title>
-  <link href="http://ea.github.io/atom.xml" rel="self"/>
+  <title><![CDATA[Category: re | ea's blag]]></title>
+  <link href="http://ea.github.io/blog/categories/re/atom.xml" rel="self"/>
   <link href="http://ea.github.io/"/>
   <updated>2013-09-15T01:28:10+02:00</updated>
   <id>http://ea.github.io/</id>
@@ -48,7 +48,7 @@ represented by the series of the pointer assignment operations to the appropriat
 offsets into the <em><a href="http://msdn.microsoft.com/en-us/library/dd627628%28v=vs.85%29.aspx">CARD_DATA</a></em> structure. By loadin apropriate C header file
 for <em>CARD_DATA</em> structure in IDA, it will be able to determine the locations of
 specific functions:
-<img src="http://ea.github.io/images/scard_data.png"></p>
+<img src="/images/scard_data.png"></p>
 
 <p>From this, we can clearly determine what each function does (at least on the)
 high level.</p>
@@ -79,39 +79,25 @@ is prefixed with the <strong>&lt;&lt;&lt;</strong> symbol. Each data transmissio
 log file immediately and file access is freed to combine the log analysis with
 the process instrumentation in the debugger.</p>
 
-<p>Here&rsquo;s the example dump:</p>
+<p>Here&rsquo;s the example dump:
+```
+Winscard!SCardTransmit:</p>
 
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>Winscard!SCardTransmit:
-</span><span class='line'>&gt;&gt;&gt; 00:A4:08:00:02:0F:02
-</span><span class='line'>&lt;&lt;&lt; 6F:38:62:36:83:02:0F ... 90:00
-</span><span class='line'>Winscard!SCardTransmit:
-</span><span class='line'>&gt;&gt;&gt; 00:B0:00:00:06
-</span><span class='line'>&lt;&lt;&lt; 00:0D:02:00:63:00:90:00
-</span><span class='line'>Winscard!SCardTransmit:
-</span><span class='line'>&gt;&gt;&gt; 00:B0:00:00:60
-</span><span class='line'>&lt;&lt;&lt; 00:0D:02:00:63:00:0A ... 90:00
-</span><span class='line'>Winscard!SCardTransmit:
-</span><span class='line'>&gt;&gt;&gt; 00:B0:00:60:09
-</span><span class='line'>&lt;&lt;&lt; 00:53:43:11:06:02:00:53:43:90:00
-</span><span class='line'>Winscard!SCardTransmit:
-</span><span class='line'>&gt;&gt;&gt; 00:A4:04:00:0B:A0:00:00:03:97:43:49:44:5F:01:00
-</span><span class='line'>&lt;&lt;&lt; 6A:82</span></code></pre></td></tr></table></div></figure>
-
+<blockquote><blockquote><blockquote><p>00:A4:08:00:02:0F:02
+&lt;&lt;&lt; 6F:38:62:36:83:02:0F &hellip; 90:00
+Winscard!SCardTransmit:
+00:B0:00:00:06
+&lt;&lt;&lt; 00:0D:02:00:63:00:90:00
+Winscard!SCardTransmit:
+00:B0:00:00:60
+&lt;&lt;&lt; 00:0D:02:00:63:00:0A &hellip; 90:00
+Winscard!SCardTransmit:
+00:B0:00:60:09
+&lt;&lt;&lt; 00:53:43:11:06:02:00:53:43:90:00
+Winscard!SCardTransmit:
+00:A4:04:00:0B:A0:00:00:03:97:43:49:44:5F:01:00
+&lt;&lt;&lt; 6A:82
+```</p></blockquote></blockquote></blockquote>
 
 <p>The first APDU command in the listing 4 has the instruction A4 which, by the
 <a href="http://www.ttfn.net/techno/smartcards/iso7816_4.html">ISO/IEC 7816-4 standard</a>, specifies the <em>SELECT FILE</em> instruction responsible

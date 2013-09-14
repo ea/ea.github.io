@@ -9,19 +9,8 @@
   <meta name="author" content="ea">
 
   
-  <meta name="description" content="Lets see how this blaging thing works. Small shellcode1
-2
-3
-4
-5
-6
-7
-8
-9
-10
-11
-main: pop %edx pop %esp
-l: pop %eax pop %ebx xchg %eax,%esp cmp $ &hellip;">
+  <meta name="description" content="In order for a smart card to be usable by a third party application, a vendor-supplied
+driver or a middleware needs to be available. On the Windows &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -84,7 +73,7 @@ l: pop %eax pop %ebx xchg %eax,%esp cmp $ &hellip;">
       
   <header>
     
-      <h1 class="entry-title"><a href="/blog/2013/09/14/testing-testing-1/">Testing 1,2,3</a></h1>
+      <h1 class="entry-title"><a href="/blog/2013/09/15/reverse-engineering-smart-card-middleware/">Smart Card Middleware Reversing Tricks</a></h1>
     
     
       <p class="meta">
@@ -100,16 +89,77 @@ l: pop %eax pop %ebx xchg %eax,%esp cmp $ &hellip;">
   
 
 
-<time datetime="2013-09-14T21:43:00+02:00" pubdate data-updated="true">Sep 14<span>th</span>, 2013</time>
+<time datetime="2013-09-15T00:30:00+02:00" pubdate data-updated="true">Sep 15<span>th</span>, 2013</time>
         
       </p>
     
   </header>
 
 
-  <div class="entry-content"><p>Lets see how this blaging thing works.</p>
+  <div class="entry-content"><p>In order for a smart card to be usable by a third party application, a vendor-supplied
+driver or a middleware needs to be available. On the Windows platform, a smart card
+middleware must follow the <a href="http://msdn.microsoft.com/en-us/windows/hardware/gg487500.aspx">Windows Smart Card Minidriver specification</a> which is
+designed to present a consistent interface to the card. This is not always the case,
+and card vendors sometimes implement custom and non-standard interfaces.</p>
 
-<figure class='code'><figcaption><span>Small shellcode</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<p>Since smart cards are designed to be tamper-resistant and secure, reverse
+engineering of the smart card itself can be time consuming and expensive so it
+is ofthen the best to take a look at the middleware.</p>
+
+<h2>Identifying key middleware functions</h2>
+
+<p>When faced with a smart card of a unknown specification,  the middleware functions
+that directly communicate with the  card should be examined. The middleware is
+responsible for abstracting the card to the programmer and examining these
+abstractions gives further insight into the smart card&rsquo;s design. The smart card
+middleware is distributed as a DLL (Dynamic Loadable Library) file which exports
+a specific set of functions defined by the minidriver specification.</p>
+
+<p>Before accessing the card in any way, the middleware must be initialized.
+Initialization is done by calling <a href="http://msdn.microsoft.com/en-us/library/dd627600%28v=vs.85%29.aspx">CardAcquireContext</a> function.
+<em>CardAcquireContext</em> must be exported by the middleware and is usually the only
+exported function.</p>
+
+<p><em>CardAcquireContext</em> is responsible, amongst other tasks, for setting the function
+pointers in the <em>CARD_DATA</em> structure. In the assembled code, this will usually be
+represented by the series of the pointer assignment operations to the appropriate
+offsets into the <em><a href="http://msdn.microsoft.com/en-us/library/dd627628%28v=vs.85%29.aspx">CARD_DATA</a></em> structure. By loadin apropriate C header file
+for <em>CARD_DATA</em> structure in IDA, it will be able to determine the locations of
+specific functions:
+<img src="/images/scard_data.png"></p>
+
+<p>From this, we can clearly determine what each function does (at least on the)
+high level.</p>
+
+<h2>Capturing data trafic</h2>
+
+<p>middleware sends the APDU commands with specific parameters to the smart card and
+the smart card responds with the APDU response. Capturing this data exchange can
+help greatly in understanding the smart card and middleware design.  The APDU structure
+is defined by the <a href="http://www.ttfn.net/techno/smartcards/iso7816_4.html">ISO/IEC 7816-4 standard</a>. The command APDU contains a
+mandatory 4 byte long header and up to 255 bytes of data.
+The response APDU is sent by the card to the reader and contains 2 byte status
+word and up to 255 bytes of data. . The command status <strong>00 90</strong> in hexadecimal
+signifies that the command has been executed successfully.</p>
+
+<p>On the Windows operating systems, all smart card communication is done trough
+<strong>WinSCard API</strong> which defines the low level smart card access function. The <em><a href="http://msdn.microsoft.com/en-us/library/windows/desktop/aa379804%28v=vs.85%29.aspx">ScardTransmit</a></em>
+function sends the command APDUs to the card and returns the response. One solution
+for monitoring the data transmission from and to the cards is to intercept
+<em>SCardTransmit</em> function calls and inspecting the arguments and return values.</p>
+
+<p>I wrote a simple DLL that hooks <em>SCardTransmit</em> and records sent and received data.
+The code is available on <a href="https://github.com/ea/smartcard-sniffer">my github repository</a> and precompiled binaries are
+available <a href="https://github.com/ea/smartcard-sniffer/releases/download/v0.1/SmartcardSniffer-0.1.zip">here</a>. During the communication between the Windows process and
+the smart card, a log file is created. Log file is named after the process.
+The transmitted data is prefixed with the <strong>>>></strong> symbol, while the received data
+is prefixed with the <strong>&lt;&lt;&lt;</strong> symbol. Each data transmission is recorded in the
+log file immediately and file access is freed to combine the log analysis with
+the process instrumentation in the debugger.</p>
+
+<p>Here&rsquo;s the example dump:</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
 <span class='line-number'>3</span>
 <span class='line-number'>4</span>
@@ -120,39 +170,44 @@ l: pop %eax pop %ebx xchg %eax,%esp cmp $ &hellip;">
 <span class='line-number'>9</span>
 <span class='line-number'>10</span>
 <span class='line-number'>11</span>
-</pre></td><td class='code'><pre><code class='nasm'><span class='line'><span class="nl">main:</span>
-</span><span class='line'>   <span class="nf">pop</span> <span class="o">%</span><span class="nb">edx</span>
-</span><span class='line'>   <span class="nf">pop</span> <span class="o">%</span><span class="nb">esp</span>
-</span><span class='line'><span class="nl">l:</span>
-</span><span class='line'>   <span class="nf">pop</span> <span class="o">%</span><span class="nb">eax</span>
-</span><span class='line'>   <span class="nf">pop</span> <span class="o">%</span><span class="nb">ebx</span>
-</span><span class='line'>   <span class="nf">xchg</span> <span class="o">%</span><span class="nb">eax</span><span class="p">,</span><span class="o">%</span><span class="nb">esp</span>
-</span><span class='line'>   <span class="nf">cmp</span> <span class="kc">$</span><span class="mh">0x41414100</span><span class="p">,</span><span class="o">%</span><span class="nb">ebx</span>
-</span><span class='line'>   <span class="nf">jne</span> <span class="nv">l</span>
-</span><span class='line'>   <span class="nf">push</span> <span class="o">%</span><span class="nb">edx</span>
-</span><span class='line'>   <span class="nf">ret</span>
-</span></code></pre></td></tr></table></div></figure>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>Winscard!SCardTransmit:
+</span><span class='line'>&gt;&gt;&gt; 00:A4:08:00:02:0F:02
+</span><span class='line'>&lt;&lt;&lt; 6F:38:62:36:83:02:0F ... 90:00
+</span><span class='line'>Winscard!SCardTransmit:
+</span><span class='line'>&gt;&gt;&gt; 00:B0:00:00:06
+</span><span class='line'>&lt;&lt;&lt; 00:0D:02:00:63:00:90:00
+</span><span class='line'>Winscard!SCardTransmit:
+</span><span class='line'>&gt;&gt;&gt; 00:B0:00:00:60
+</span><span class='line'>&lt;&lt;&lt; 00:0D:02:00:63:00:0A ... 90:00
+</span><span class='line'>Winscard!SCardTransmit:
+</span><span class='line'>&gt;&gt;&gt; 00:B0:00:60:09
+</span><span class='line'>&lt;&lt;&lt; 00:53:43:11:06:02:00:53:43:90:00
+</span><span class='line'>Winscard!SCardTransmit:
+</span><span class='line'>&gt;&gt;&gt; 00:A4:04:00:0B:A0:00:00:03:97:43:49:44:5F:01:00
+</span><span class='line'>&lt;&lt;&lt; 6A:82</span></code></pre></td></tr></table></div></figure>
 
 
-<p>What if I change this now?</p>
+<p>The first APDU command in the listing 4 has the instruction A4 which, by the
+<a href="http://www.ttfn.net/techno/smartcards/iso7816_4.html">ISO/IEC 7816-4 standard</a>, specifies the <em>SELECT FILE</em> instruction responsible
+for selecting a particular elementary file on the smart card with the name <strong>0F 02</strong>.
+The last two bytes of the response APDU are <em>90 00</em> which indicates the success.
+By enumerating all unique <em>SELECT FILE</em> instructions executed, a list of the elementary
+files present on the card can be created. The next three commands have the <em>INS</em>
+byte set to <strong>B0</strong> which corresponds to the <em>READ BINARY</em> instruction. The <em>READ BINARY</em>
+instruction can read the maximum of 255 bytes of data at a time so multiple
+requests with incrementing offsets would be needed to read a large file. The
+file can then be reconstructed by the log. The Last command is the <em>SELECT FILE</em>
+instruction which response indicates an error has occurred.</p>
 
-<p>Kewl beans&hellip;</p>
+<p>The extensive list of known command APDU instructions can be found in <a href="http://web.archive.org/web/20090630004017/http://cheef.ru/docs/HowTo/APDU.info">this page on web archive</a>.
+Repackaging the sniffed data into something that Wireshark can eat would be
+useful but I&rsquo;ll leave that for the next time.</p>
 
-<p>Lets see some more code highlights!</p>
-
-<figure class='code'><figcaption><span>Hello world</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-</pre></td><td class='code'><pre><code class='c'><span class='line'><span class="n">main</span><span class="p">(</span><span class="kt">int</span> <span class="n">argc</span><span class="p">,</span> <span class="kt">char</span> <span class="o">**</span><span class="n">argv</span><span class="p">){</span>
-</span><span class='line'>    <span class="n">printf</span><span class="p">(</span><span class="s">&quot;Hello world!</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">);</span>
-</span><span class='line'><span class="p">}</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>Ok how about an image?</p>
-
-<p><img src="/images/antenna.jpg" width="1350" height="1050" title="HF antenna" >
-Home made hf antenna</p>
+<p>Peace out</p>
 </div>
   
   
@@ -173,7 +228,7 @@ Home made hf antenna</p>
   <ul id="recent_posts">
     
       <li class="post">
-        <a href="/blog/2013/09/14/testing-testing-1/">Testing 1,2,3</a>
+        <a href="/blog/2013/09/15/reverse-engineering-smart-card-middleware/">Smart Card Middleware Reversing Tricks</a>
       </li>
     
   </ul>
