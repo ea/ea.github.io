@@ -231,6 +231,58 @@ find. The backdoor is a bit more involved than the D-Link one. Awesome work!</p>
 
 <p>So all of them contain the offending string, you&rsquo;d need to test if the backdoor is actually reachable.
 For more details, see <a href="https://twitter.com/devttyS0/">devttyS0&rsquo;s</a> <a href="http://www.devttys0.com/2013/10/from-china-with-love/">From China with love</a> post.</p>
+
+<p>Update:</p>
+
+<p>Grabbed some more firmwares from tenda and these also have the ofending string in their httpd:</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>2b8e52eeeebcf2ca1d8aea49e0decc3e  ./_US_W268RRA__H3_V3.3.6h_EN_SPI.bin.extracted/_40.extracted/_2A1000.extracted/cpio-root/bin/httpd
+</span><span class='line'>2b8e52eeeebcf2ca1d8aea49e0decc3e  ./_US_W311RRA__H3_V3.3.6h_EN_SPI.bin.extracted/_40.extracted/_2A1000.extracted/cpio-root/bin/httpd
+</span><span class='line'>38dbefea2e2072794fdee48d0454ea81  ./_w1500a_kfw_V1.0.1.22_en_svn6227.bin.extracted/squashfs-root/bin/httpd
+</span><span class='line'>3a5c7ca273dbc9abc2fa2f01872c6ae9  ./_U150M_V3.32.12_EN.bin.extracted/_40.extracted/_2AD000.extracted/cpio-root/bin/httpd
+</span><span class='line'>3a5c7ca273dbc9abc2fa2f01872c6ae9  ./_U300M_V3.32.12_EN.bin.extracted/_40.extracted/_2AD000.extracted/cpio-root/bin/httpd
+</span><span class='line'>3da70dbcb25267981799cd4e80d45a66  ./_U_W302RRA_V3.1.201d_EN.bin.extracted/_40.extracted/_ramdisk.extracted/squashfs-root/bin/httpd
+</span><span class='line'>4dd02694228931fa29d0ab24c7cf5244  ./_US_N60BRV1_N60_V1.0.0.15_EN.bin.extracted/squashfs-root/bin/httpd
+</span><span class='line'>545c52d9a6ab82e38925f7ba53655738  ./_US_N6BRV1_N6_V2.0.0.2_EN.bin.extracted/squashfs-root/bin/httpd
+</span><span class='line'>55429ee07ee7e12463cfb31bdde3545c  ./_U_W150M_EN_V3.33.13_SPI_EN.bin.extracted/_40.extracted/_2A2000.extracted/cpio-root/bin/httpd
+</span><span class='line'>55429ee07ee7e12463cfb31bdde3545c  ./_U_W300M_EN_V3.33.13_SPI_EN.bin.extracted/_40.extracted/_2A2000.extracted/cpio-root/bin/httpd
+</span><span class='line'>6940fb6098d7248430d307ad9e0f41e3  ./_U_W330R_V3.1.201f_en_onWISP.bin.extracted/_40.extracted/_ramdisk.extracted/squashfs-root/bin/httpd
+</span><span class='line'>7bfc5d1aa54322e2a6a3d30dc1b071a1  ./_W330R_V3.1.201d_EN.bin.extracted/_40.extracted/_ramdisk.extracted/squashfs-root/bin/httpd
+</span><span class='line'>8fdd1acfb877e75254db8bf0e4d4b9ce  ./_W311R_H1_V3.3.5o.bin.extracted/_40.extracted/_29E000.extracted/cpio-root/bin/httpd
+</span><span class='line'>9618f60bb71ff28670c6447a4972205c  ./_w311r_H1_V3.3.5n_en.bin.extracted/_40.extracted/_29E000.extracted/cpio-root/bin/httpd
+</span><span class='line'>9e2403f54a5de6de68217f0f55606563  ./_US_N60BRV1_N60_V1.0.0.16_EN.bin.extracted/squashfs-root/bin/httpd
+</span><span class='line'>b663cb3e1e9b09bdd33116d9fade6866  ./_US_N80_W568Rbr_V1.0.1.8(4428)_en_TD.bin.extracted/_piggy.extracted/_3D8000.extracted/cpio-root/bin/httpd
+</span><span class='line'>d1e45b3ad126ba5ba2f7f359b8277438  ./_W311r_H1_V3.3.6b.bin.extracted/_40.extracted/_29E000.extracted/cpio-root/bin/httpd
+</span><span class='line'>d9eb8d5d79a3f4e9f4e5ded2887c39c4  ./_U268R_H1_V3.3.6d_EN.bin.extracted/_40.extracted/_2AD000.extracted/cpio-root/bin/httpd
+</span><span class='line'>d9eb8d5d79a3f4e9f4e5ded2887c39c4  ./_U311R_H1_V3.3.6d_EN.bin.extracted/_40.extracted/_2AD000.extracted/cpio-root/bin/httpd
+</span><span class='line'>fe34ecc4b90e0fc9bd3d50e216f80b04  ./_U150M_RT_EN_V3.32.11.bin.extracted/_40.extracted/_2AD000.extracted/cpio-root/bin/httpd
+</span><span class='line'>fe34ecc4b90e0fc9bd3d50e216f80b04  ./_U300M_RT_EN_V3.32.11.bin.extracted/_40.extracted/_2AD000.extracted/cpio-root/bin/httpd</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Keep on rocking in the free world,</p>
+
+<p>ea</p>
 </div>
   
   
