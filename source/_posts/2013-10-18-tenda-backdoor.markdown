@@ -11,7 +11,7 @@ Since there are a bunch of cheap chinese routers around here, and Tenda
 routers being especially cheap and popular, I wanted to take a look.
 
 Long story short, [devttyS0 beat me to it and published another awsome backdoor][3]
-find. 
+find. The backdoor is a bit more involved than the D-Link one. Awesome work!
 
 What follow are just some details on other firmware versions I got.
 
@@ -86,6 +86,7 @@ And httpd binaries  that contain the ofending string "w302r_mfg"
 ```
 
 So all of them contain the offending string, you'd need to test if the backdoor is actually reachable.
+For more details, see [devttyS0's][1] [From China with love][3] post.
 
 [1]: https://twitter.com/devttyS0/
 [2]: http://www.devttys0.com/2013/10/reverse-engineering-a-d-link-backdoor/
