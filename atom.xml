@@ -4,7 +4,7 @@
   <title><![CDATA[ea's blag]]></title>
   <link href="http://ea.github.io/atom.xml" rel="self"/>
   <link href="http://ea.github.io/"/>
-  <updated>2013-09-15T02:28:12+02:00</updated>
+  <updated>2013-10-18T10:05:02+02:00</updated>
   <id>http://ea.github.io/</id>
   <author>
     <name><![CDATA[ea]]></name>
@@ -12,6 +12,148 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Tenda backdoor]]></title>
+    <link href="http://ea.github.io/blog/2013/10/18/tenda-backdoor/"/>
+    <updated>2013-10-18T09:53:00+02:00</updated>
+    <id>http://ea.github.io/blog/2013/10/18/tenda-backdoor</id>
+    <content type="html"><![CDATA[<p>So, <a href="https://twitter.com/devttyS0/">devttyS0</a> recently published his find of a backdoor in <a href="http://www.devttys0.com/2013/10/reverse-engineering-a-d-link-backdoor/">certain D-Link routers</a>.
+Since there are a bunch of cheap chinese routers around here, and Tenda
+routers being especially cheap and popular, I wanted to take a look.</p>
+
+<p>Long story short, <a href="http://www.devttys0.com/2013/10/from-china-with-love/">devttyS0 beat me to it and published another awsome backdoor</a>
+find.</p>
+
+<p>What follow are just some details on other firmware versions I got.</p>
+
+<p>list  of firmwares :</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>-rw-r--r-- 1 ea ea 2854920 Oct 18 09:34 301r_v3.1.192_en.bin
+</span><span class='line'>-rw-r--r-- 1 ea ea 2854920 Oct 18 09:34 302r_v3.1.192_en.bin
+</span><span class='line'>-rw-r--r-- 1 ea ea 2556279 Oct 18 09:34 3g611r_en_0607.bin.bin
+</span><span class='line'>-rw-r--r-- 1 ea ea 2544688 Oct 18 09:34 3gr_H2_V3.3.0y_multi_02.bin
+</span><span class='line'>-rw-r--r-- 1 ea ea 2536583 Oct 18 09:34 U_3G611R_H2_V3.3.1e_MULTI_02.bin
+</span><span class='line'>-rw-r--r-- 1 ea ea 1733480 Oct 18 09:34 U_W311R_W268R_H3_V3.3.6h_EN_spi.bin
+</span><span class='line'>-rw-r--r-- 1 ea ea 2778565 Oct 18 09:34 U_W330R_V3.1.201d_tenda_en.bin
+</span><span class='line'>-rw-r--r-- 1 ea ea 2853531 Oct 18 09:34 V3.1.201d_W301R_2010_0709.bin
+</span><span class='line'>-rw-r--r-- 1 ea ea 2853531 Oct 18 09:34 V3.1.201d_W302R_2010_0709.bin
+</span><span class='line'>-rw-r--r-- 1 ea ea 1710398 Oct 18 09:34 W311r_W268R_H1_V3.3.6b_ost_staticR.bin
+</span><span class='line'>-rw-r--r-- 1 ea ea 1710398 Oct 18 09:34 W368r_H1_V3.3.6b_ost_staticR.bin
+</span><span class='line'>-rw-r--r-- 1 ea ea 1739357 Oct 18 09:34 w368r_H1_V3.3.6l_EN.bin
+</span><span class='line'>-rw-r--r-- 1 ea ea 1733480 Oct 18 09:34 W368R_H3_V3.3.6h_EN_spi.bin</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Firmwares can easily be extracted with binwalk ( -Me switch to extract everything).</p>
+
+<p>List of httpd binaries in them:</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>./_301r_v3.1.192_en.bin.extracted/_40.extracted/_ramdisk.extracted/squashfs-root/bin/httpd
+</span><span class='line'>./_W311r_W268R_H1_V3.3.6b_ost_staticR.bin.extracted/_40.extracted/_29E000.extracted/cpio-root/bin/httpd
+</span><span class='line'>./_302r_v3.1.192_en.bin.extracted/_40.extracted/_ramdisk.extracted/squashfs-root/bin/httpd
+</span><span class='line'>./_V3.1.201d_W301R_2010_0709.bin.extracted/_40.extracted/_ramdisk.extracted/squashfs-root/bin/httpd
+</span><span class='line'>./_W368R_H3_V3.3.6h_EN_spi.bin.extracted/_40.extracted/_2A1000.extracted/cpio-root/bin/httpd
+</span><span class='line'>./_V3.1.201d_W302R_2010_0709.bin.extracted/_40.extracted/_ramdisk.extracted/squashfs-root/bin/httpd
+</span><span class='line'>./_3gr_H2_V3.3.0y_multi_02.bin.extracted/_40.extracted/_401000.extracted/cpio-root/bin/httpd
+</span><span class='line'>./_w368r_H1_V3.3.6l_EN.bin.extracted/_40.extracted/_298000.extracted/cpio-root/bin/httpd
+</span><span class='line'>./_U_W330R_V3.1.201d_tenda_en.bin.extracted/_40.extracted/_ramdisk.extracted/squashfs-root/bin/httpd
+</span><span class='line'>./_W368r_H1_V3.3.6b_ost_staticR.bin.extracted/_40.extracted/_29E000.extracted/cpio-root/bin/httpd
+</span><span class='line'>./_3g611r_en_0607.bin.bin.extracted/_40.extracted/_42F000.extracted/cpio-root/bin/httpd
+</span><span class='line'>./_U_W311R_W268R_H3_V3.3.6h_EN_spi.bin.extracted/_40.extracted/_2A1000.extracted/cpio-root/bin/httpd
+</span><span class='line'>./_U_3G611R_H2_V3.3.1e_MULTI_02.bin.extracted/_40.extracted/_3F9000.extracted/cpio-root/bin/httpd</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Their coresponding md5 sums:</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>30a4a545068d99d1427556bd6612bf98  ./_301r_v3.1.192_en.bin.extracted/_40.extracted/_ramdisk.extracted/squashfs-root/bin/httpd
+</span><span class='line'>d1e45b3ad126ba5ba2f7f359b8277438  ./_W311r_W268R_H1_V3.3.6b_ost_staticR.bin.extracted/_40.extracted/_29E000.extracted/cpio-root/bin/httpd
+</span><span class='line'>30a4a545068d99d1427556bd6612bf98  ./_302r_v3.1.192_en.bin.extracted/_40.extracted/_ramdisk.extracted/squashfs-root/bin/httpd
+</span><span class='line'>bf4d17ad1188fa7bdd12f99b3b294567  ./_V3.1.201d_W301R_2010_0709.bin.extracted/_40.extracted/_ramdisk.extracted/squashfs-root/bin/httpd
+</span><span class='line'>f0cd57047f6c329e59102ce4741481d8  ./_W368R_H3_V3.3.6h_EN_spi.bin.extracted/_40.extracted/_2A1000.extracted/cpio-root/bin/httpd
+</span><span class='line'>bf4d17ad1188fa7bdd12f99b3b294567  ./_V3.1.201d_W302R_2010_0709.bin.extracted/_40.extracted/_ramdisk.extracted/squashfs-root/bin/httpd
+</span><span class='line'>3f578d8b7cf8565baa239454c9713818  ./_3gr_H2_V3.3.0y_multi_02.bin.extracted/_40.extracted/_401000.extracted/cpio-root/bin/httpd
+</span><span class='line'>bce9466a9bb018bd32a9dacb3a8c0487  ./_w368r_H1_V3.3.6l_EN.bin.extracted/_40.extracted/_298000.extracted/cpio-root/bin/httpd
+</span><span class='line'>890a83d5aee333c40b8f0032169e3a4e  ./_U_W330R_V3.1.201d_tenda_en.bin.extracted/_40.extracted/_ramdisk.extracted/squashfs-root/bin/httpd
+</span><span class='line'>d1e45b3ad126ba5ba2f7f359b8277438  ./_W368r_H1_V3.3.6b_ost_staticR.bin.extracted/_40.extracted/_29E000.extracted/cpio-root/bin/httpd
+</span><span class='line'>a22f85d995ce9c3383632b6104c5be8e  ./_3g611r_en_0607.bin.bin.extracted/_40.extracted/_42F000.extracted/cpio-root/bin/httpd
+</span><span class='line'>f0cd57047f6c329e59102ce4741481d8  ./_U_W311R_W268R_H3_V3.3.6h_EN_spi.bin.extracted/_40.extracted/_2A1000.extracted/cpio-root/bin/httpd
+</span><span class='line'>5bd72353206168fd340b293b2ddd264a  ./_U_3G611R_H2_V3.3.1e_MULTI_02.bin.extracted/_40.extracted/_3F9000.extracted/cpio-root/bin/httpd</span></code></pre></td></tr></table></div></figure>
+
+
+<p>There are 8 different binaries in total.</p>
+
+<p>And httpd binaries  that contain the ofending string &ldquo;w302r_mfg&rdquo;</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>./_301r_v3.1.192_en.bin.extracted/_40.extracted/_ramdisk.extracted/squashfs-root/bin/httpd
+</span><span class='line'>./_W311r_W268R_H1_V3.3.6b_ost_staticR.bin.extracted/_40.extracted/_29E000.extracted/cpio-root/bin/httpd
+</span><span class='line'>./_302r_v3.1.192_en.bin.extracted/_40.extracted/_ramdisk.extracted/squashfs-root/bin/httpd
+</span><span class='line'>./_V3.1.201d_W301R_2010_0709.bin.extracted/_40.extracted/_ramdisk.extracted/squashfs-root/bin/httpd
+</span><span class='line'>./_W368R_H3_V3.3.6h_EN_spi.bin.extracted/_40.extracted/_2A1000.extracted/cpio-root/bin/httpd
+</span><span class='line'>./_V3.1.201d_W302R_2010_0709.bin.extracted/_40.extracted/_ramdisk.extracted/squashfs-root/bin/httpd
+</span><span class='line'>./_3gr_H2_V3.3.0y_multi_02.bin.extracted/_40.extracted/_401000.extracted/cpio-root/bin/httpd
+</span><span class='line'>./_w368r_H1_V3.3.6l_EN.bin.extracted/_40.extracted/_298000.extracted/cpio-root/bin/httpd
+</span><span class='line'>./_U_W330R_V3.1.201d_tenda_en.bin.extracted/_40.extracted/_ramdisk.extracted/squashfs-root/bin/httpd
+</span><span class='line'>./_W368r_H1_V3.3.6b_ost_staticR.bin.extracted/_40.extracted/_29E000.extracted/cpio-root/bin/httpd
+</span><span class='line'>./_3g611r_en_0607.bin.bin.extracted/_40.extracted/_42F000.extracted/cpio-root/bin/httpd
+</span><span class='line'>./_U_W311R_W268R_H3_V3.3.6h_EN_spi.bin.extracted/_40.extracted/_2A1000.extracted/cpio-root/bin/httpd
+</span><span class='line'>./_U_3G611R_H2_V3.3.1e_MULTI_02.bin.extracted/_40.extracted/_3F9000.extracted/cpio-root/bin/httpd</span></code></pre></td></tr></table></div></figure>
+
+
+<p>So all of them contain the offending string, you&rsquo;d need to test if the backdoor is actually reachable.</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Smart card middleware reversing tricks]]></title>

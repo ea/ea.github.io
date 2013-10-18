@@ -5,7 +5,7 @@
 <!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <title>ea's blag</title>
+  <title>Tenda backdoor - ea's blag</title>
   <meta name="author" content="ea">
 
   
@@ -19,7 +19,7 @@ Since there are a bunch of cheap chinese routers around here, and &hellip;">
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   
-  <link rel="canonical" href="http://ea.github.io">
+  <link rel="canonical" href="http://ea.github.io/blog/2013/10/18/tenda-backdoor">
   <link href="/favicon.png" rel="icon">
   <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
   <link href="/atom.xml" rel="alternate" title="ea's blag" type="application/atom+xml">
@@ -65,15 +65,12 @@ Since there are a bunch of cheap chinese routers around here, and &hellip;">
 </nav>
   <div id="main">
     <div id="content">
-      <div class="blog-index">
+      <div>
+<article class="hentry" role="article">
   
-  
-  
-    <article>
-      
   <header>
     
-      <h1 class="entry-title"><a href="/blog/2013/10/18/tenda-backdoor/">Tenda Backdoor</a></h1>
+      <h1 class="entry-title">Tenda Backdoor</h1>
     
     
       <p class="meta">
@@ -96,7 +93,7 @@ Since there are a bunch of cheap chinese routers around here, and &hellip;">
   </header>
 
 
-  <div class="entry-content"><p>So, <a href="https://twitter.com/devttyS0/">devttyS0</a> recently published his find of a backdoor in <a href="http://www.devttys0.com/2013/10/reverse-engineering-a-d-link-backdoor/">certain D-Link routers</a>.
+<div class="entry-content"><p>So, <a href="https://twitter.com/devttyS0/">devttyS0</a> recently published his find of a backdoor in <a href="http://www.devttys0.com/2013/10/reverse-engineering-a-d-link-backdoor/">certain D-Link routers</a>.
 Since there are a bunch of cheap chinese routers around here, and Tenda
 routers being especially cheap and popular, I wanted to take a look.</p>
 
@@ -231,22 +228,16 @@ find.</p>
 
 <p>So all of them contain the offending string, you&rsquo;d need to test if the backdoor is actually reachable.</p>
 </div>
-  
-  
 
 
-    </article>
-  
-  
-    <article>
+  <footer>
+    <p class="meta">
       
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2013/09/15/reverse-engineering-smart-card-middleware/">Smart Card Middleware Reversing Tricks</a></h1>
-    
-    
-      <p class="meta">
-        
+  
+
+<span class="byline author vcard">Posted by <span class="fn">ea</span></span>
+
+      
 
 
 
@@ -258,138 +249,30 @@ find.</p>
   
 
 
-<time datetime="2013-09-15T00:30:00+02:00" pubdate data-updated="true">Sep 15<span>th</span>, 2013</time>
-        
-      </p>
+<time datetime="2013-10-18T09:53:00+02:00" pubdate data-updated="true">Oct 18<span>th</span>, 2013</time>
+      
+
+
+    </p>
     
-  </header>
-
-
-  <div class="entry-content"><p>In order for a smart card to be usable by a third party application, a vendor-supplied
-driver or a middleware needs to be available. On the Windows platform, a smart card
-middleware must follow the <a href="http://msdn.microsoft.com/en-us/windows/hardware/gg487500.aspx">Windows Smart Card Minidriver specification</a> which is
-designed to present a consistent interface to the card. This is not always the case,
-and card vendors sometimes implement custom and non-standard interfaces.</p>
-
-<p>Since smart cards are designed to be tamper-resistant and secure, reverse
-engineering of the smart card itself can be time consuming and expensive so it
-is ofthen the best to take a look at the middleware.</p>
-
-<h2>Identifying key middleware functions</h2>
-
-<p>When faced with a smart card of a unknown specification,  the middleware functions
-that directly communicate with the  card should be examined. The middleware is
-responsible for abstracting the card to the programmer and examining these
-abstractions gives further insight into the smart card&rsquo;s design. The smart card
-middleware is distributed as a DLL (Dynamic Loadable Library) file which exports
-a specific set of functions defined by the minidriver specification.</p>
-
-<p>Before accessing the card in any way, the middleware must be initialized.
-Initialization is done by calling <a href="http://msdn.microsoft.com/en-us/library/dd627600%28v=vs.85%29.aspx">CardAcquireContext</a> function.
-<em>CardAcquireContext</em> must be exported by the middleware and is usually the only
-exported function.</p>
-
-<p><em>CardAcquireContext</em> is responsible, amongst other tasks, for setting the function
-pointers in the <em>CARD_DATA</em> structure. In the assembled code, this will usually be
-represented by the series of the pointer assignment operations to the appropriate
-offsets into the <em><a href="http://msdn.microsoft.com/en-us/library/dd627628%28v=vs.85%29.aspx">CARD_DATA</a></em> structure. By loadin apropriate C header file
-for <em>CARD_DATA</em> structure in IDA, it will be able to determine the locations of
-specific functions:
-<img src="/images/scard_data.png"></p>
-
-<p>From this, we can clearly determine what each function does (at least on the)
-high level.</p>
-
-<h2>Capturing data trafic</h2>
-
-<p>middleware sends the APDU commands with specific parameters to the smart card and
-the smart card responds with the APDU response. Capturing this data exchange can
-help greatly in understanding the smart card and middleware design.  The APDU structure
-is defined by the <a href="http://www.ttfn.net/techno/smartcards/iso7816_4.html">ISO/IEC 7816-4 standard</a>. The command APDU contains a
-mandatory 4 byte long header and up to 255 bytes of data.
-The response APDU is sent by the card to the reader and contains 2 byte status
-word and up to 255 bytes of data. . The command status <strong>00 90</strong> in hexadecimal
-signifies that the command has been executed successfully.</p>
-
-<p>On the Windows operating systems, all smart card communication is done trough
-<strong>WinSCard API</strong> which defines the low level smart card access function. The <em><a href="http://msdn.microsoft.com/en-us/library/windows/desktop/aa379804%28v=vs.85%29.aspx">ScardTransmit</a></em>
-function sends the command APDUs to the card and returns the response. One solution
-for monitoring the data transmission from and to the cards is to intercept
-<em>SCardTransmit</em> function calls and inspecting the arguments and return values.</p>
-
-<p>I wrote a simple DLL that hooks <em>SCardTransmit</em> and records sent and received data.
-The code is available on <a href="https://github.com/ea/smartcard-sniffer">my github repository</a> and precompiled binaries are
-available <a href="https://github.com/ea/smartcard-sniffer/releases/download/v0.1/SmartcardSniffer-0.1.zip">here</a>. During the communication between the Windows process and
-the smart card, a log file is created. Log file is named after the process.
-The transmitted data is prefixed with the <strong>>>></strong> symbol, while the received data
-is prefixed with the <strong>&lt;&lt;&lt;</strong> symbol. Each data transmission is recorded in the
-log file immediately and file access is freed to combine the log analysis with
-the process instrumentation in the debugger.</p>
-
-<p>Here&rsquo;s the example dump:</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>Winscard!SCardTransmit:
-</span><span class='line'>&gt;&gt;&gt; 00:A4:08:00:02:0F:02
-</span><span class='line'>&lt;&lt;&lt; 6F:38:62:36:83:02:0F ... 90:00
-</span><span class='line'>Winscard!SCardTransmit:
-</span><span class='line'>&gt;&gt;&gt; 00:B0:00:00:06
-</span><span class='line'>&lt;&lt;&lt; 00:0D:02:00:63:00:90:00
-</span><span class='line'>Winscard!SCardTransmit:
-</span><span class='line'>&gt;&gt;&gt; 00:B0:00:00:60
-</span><span class='line'>&lt;&lt;&lt; 00:0D:02:00:63:00:0A ... 90:00
-</span><span class='line'>Winscard!SCardTransmit:
-</span><span class='line'>&gt;&gt;&gt; 00:B0:00:60:09
-</span><span class='line'>&lt;&lt;&lt; 00:53:43:11:06:02:00:53:43:90:00
-</span><span class='line'>Winscard!SCardTransmit:
-</span><span class='line'>&gt;&gt;&gt; 00:A4:04:00:0B:A0:00:00:03:97:43:49:44:5F:01:00
-</span><span class='line'>&lt;&lt;&lt; 6A:82</span></code></pre></td></tr></table></div></figure>
-
-
-<p>The first APDU command in the listing 4 has the instruction A4 which, by the
-<a href="http://www.ttfn.net/techno/smartcards/iso7816_4.html">ISO/IEC 7816-4 standard</a>, specifies the <em>SELECT FILE</em> instruction responsible
-for selecting a particular elementary file on the smart card with the name <strong>0F 02</strong>.
-The last two bytes of the response APDU are <em>90 00</em> which indicates the success.
-By enumerating all unique <em>SELECT FILE</em> instructions executed, a list of the elementary
-files present on the card can be created. The next three commands have the <em>INS</em>
-byte set to <strong>B0</strong> which corresponds to the <em>READ BINARY</em> instruction. The <em>READ BINARY</em>
-instruction can read the maximum of 255 bytes of data at a time so multiple
-requests with incrementing offsets would be needed to read a large file. The
-file can then be reconstructed by the log. The Last command is the <em>SELECT FILE</em>
-instruction which response indicates an error has occurred.</p>
-
-<p>The extensive list of known command APDU instructions can be found in <a href="http://web.archive.org/web/20090630004017/http://cheef.ru/docs/HowTo/APDU.info">this page on web archive</a>.
-Repackaging the sniffed data into something that Wireshark can eat would be
-useful but I&rsquo;ll leave that for the next time.</p>
-
-<p>Peace out</p>
+      <div class="sharing">
+  
+  
+  
 </div>
-  
-  
 
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/2013/09/15/reverse-engineering-smart-card-middleware/" title="Previous Post: Smart card middleware reversing tricks">&laquo; Smart card middleware reversing tricks</a>
+      
+      
+    </p>
+  </footer>
+</article>
 
-    </article>
-  
-  <div class="pagination">
-    
-    <a href="/blog/archives">Blog Archives</a>
-    
-  </div>
 </div>
+
 <aside class="sidebar">
   
     <section>
@@ -410,7 +293,7 @@ useful but I&rsquo;ll leave that for the next time.</p>
 <section>
   <h1>GitHub Repos</h1>
   <ul id="gh_repos">
-    <li class="loading">Status updating&#8230;</li>
+    <li class="loading">Status updating...</li>
   </ul>
   
   <a href="https://github.com/ea">@ea</a> on GitHub
@@ -442,6 +325,7 @@ useful but I&rsquo;ll leave that for the next time.</p>
 
   
 </aside>
+
 
     </div>
   </div>
