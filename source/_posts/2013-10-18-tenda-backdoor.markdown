@@ -116,6 +116,11 @@ fe34ecc4b90e0fc9bd3d50e216f80b04  ./_U150M_RT_EN_V3.32.11.bin.extracted/_40.extr
 fe34ecc4b90e0fc9bd3d50e216f80b04  ./_U300M_RT_EN_V3.32.11.bin.extracted/_40.extracted/_2AD000.extracted/cpio-root/bin/httpd
 ```
 
+Update 2:
+
+Also wrote a quick Nmap NSE script to test for the backdoored routers - [tenda-backdoor.nse][4]
+
+
 Keep on rocking in the free world,
 
 ea
@@ -123,3 +128,4 @@ ea
 [1]: https://twitter.com/devttyS0/
 [2]: http://www.devttys0.com/2013/10/reverse-engineering-a-d-link-backdoor/
 [3]: http://www.devttys0.com/2013/10/from-china-with-love/
+[4]: https://github.com/ea/nmap-scripts/blob/master/tenda-backdoor.nse
