@@ -18,26 +18,31 @@ for n900 to act as a USB host. To enable the host mode, you'd need to install
 H-E=N or host mode enabler GUI (the package is called hostmode-gui) which
 will in turn install kernel-power (so be careful unless you already have it). 
 
+<!--more-->
+
 To actually connect anything to n900 in a host mode you'd probably need some 
 adapter to go from female micro USB to female type A USB port. I had a OTG cable
 lying around so I used that. But you could just use a female type A to female type A
 USB adapter which would be a cheaper option. 
-{% img /images/otg.png %}
+{% img /images/otg.png 450 550 %}
 
 Start H-E-N and select "Full speed hostmode" and turn VBUS boost on. 
 Do note that running HEN will disable battery level monitoring so battery level
 indicator won't work. 
-{% img /images/hen.png %}
+
+{% img m /images/hen.png 450 550 %}
 
 Now, when you connect the proxmark3 board, press "Enumerate" in HEN. This will
 enumerate all usb devices attached and make them available to the system. After 
 enumeration, the LEDs on proxmark3 board should light up and you should hear the 
 relay click. This means that the board is powered up.  Here's how my setup looks:
-{% img /images/setup.png %}
+
+{% img /images/setup.png 450 550 %}
 
 If all goes well, you should now be able to see proxmark3 registered either via 
 looking at `dmesg` or `lsusb` output.
-{% img /images/dmesg.png %}
+
+{% img /images/dmesg.png 450 550 %}
 
 All is well so far. Next thing we need is a proxmark3 client. Building stuff 
 for n900 is a bit painfull so I opted for [debian chroot][4]. You can install debian
@@ -56,7 +61,8 @@ apt-get install subversion p7zip build-essential libreadline5 libreadline-dev li
 
 After you install all the required packages, building the client is as easy as running
 `make`. After the successful build, you should be able to run the proxmark3 client:
-{% img /images/pm3.png %}
+
+{% img /images/pm3.png 450 550 %}
 
 All this means I now have [blacode (crapto1)][5] on my phone!
 
@@ -73,16 +79,19 @@ modprobe usbserial vendor=0x2d2d product=0x504d
 After this, a ttyUSB0 device should be create which you can use to talk to the
 proxmark3 and we are done!
 
-{% img /images/ttyusb.png %}
+{% img /images/ttyusb.png  450 550 %}
 
 Check if the antenna is working (atm I had only LF antenna attached):
-{% img /images/lf.png %}
+
+{% img /images/lf.png 450 550 %}
 
 Hooray!!! I now have a very very portable very very neat RFID tool!
 Now to write some scripts to automate the tasks and all and we are all set. 
 Small problem is that currently I can't plot :/
-{% img /images/noplot.png %}
-But I'll fix that soon too
+
+{% img /images/noplot.png 450 550 %}
+
+But I'll fix that soon too.
 
 Not sure how long the battery will hold (n900 is not famed for it's battery 
 durability) but rough calculations tell me it will work for more than half an 

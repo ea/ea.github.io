@@ -12,7 +12,7 @@ routers being especially cheap and popular, I wanted to take a look.
 
 Long story short, [devttyS0 beat me to it and published another awsome backdoor][3]
 find. The backdoor is a bit more involved than the D-Link one. Awesome work!
-
+<!--more-->
 What follow are just some details on other firmware versions I got.
 
 list  of firmwares :

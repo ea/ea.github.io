@@ -10,7 +10,7 @@ driver or a middleware needs to be available. On the Windows platform, a smart c
 middleware must follow the [Windows Smart Card Minidriver specification][1] which is
 designed to present a consistent interface to the card. This is not always the case,
 and card vendors sometimes implement custom and non-standard interfaces.
-
+<!--more-->
 Since smart cards are designed to be tamper-resistant and secure, reverse 
 engineering of the smart card itself can be time consuming and expensive so it 
 is ofthen the best to take a look at the middleware. 
