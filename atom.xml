@@ -4,7 +4,7 @@
   <title><![CDATA[ea's blag]]></title>
   <link href="http://ea.github.io/atom.xml" rel="self"/>
   <link href="http://ea.github.io/"/>
-  <updated>2013-10-22T11:49:35+02:00</updated>
+  <updated>2013-10-22T13:16:58+02:00</updated>
   <id>http://ea.github.io/</id>
   <author>
     <name><![CDATA[ea]]></name>
@@ -30,26 +30,32 @@ for n900 to act as a USB host. To enable the host mode, you&rsquo;d need to inst
 H-E=N or host mode enabler GUI (the package is called hostmode-gui) which
 will in turn install kernel-power (so be careful unless you already have it).</p>
 
+<!--more-->
+
+
 <p>To actually connect anything to n900 in a host mode you&rsquo;d probably need some
 adapter to go from female micro USB to female type A USB port. I had a OTG cable
 lying around so I used that. But you could just use a female type A to female type A
 USB adapter which would be a cheaper option.
-<img src="http://ea.github.io/images/otg.png"></p>
+<img src="http://ea.github.io/images/otg.png" width="450" height="550"></p>
 
 <p>Start H-E-N and select &ldquo;Full speed hostmode&rdquo; and turn VBUS boost on.
 Do note that running HEN will disable battery level monitoring so battery level
-indicator won&rsquo;t work.
-<img src="http://ea.github.io/images/hen.png"></p>
+indicator won&rsquo;t work.</p>
+
+<p><img class="m" src="http://ea.github.io/images/hen.png" width="450" height="550"></p>
 
 <p>Now, when you connect the proxmark3 board, press &ldquo;Enumerate&rdquo; in HEN. This will
 enumerate all usb devices attached and make them available to the system. After
 enumeration, the LEDs on proxmark3 board should light up and you should hear the
-relay click. This means that the board is powered up.  Here&rsquo;s how my setup looks:
-<img src="http://ea.github.io/images/setup.png"></p>
+relay click. This means that the board is powered up.  Here&rsquo;s how my setup looks:</p>
+
+<p><img src="http://ea.github.io/images/setup.png" width="450" height="550"></p>
 
 <p>If all goes well, you should now be able to see proxmark3 registered either via
-looking at <code>dmesg</code> or <code>lsusb</code> output.
-<img src="http://ea.github.io/images/dmesg.png"></p>
+looking at <code>dmesg</code> or <code>lsusb</code> output.</p>
+
+<p><img src="http://ea.github.io/images/dmesg.png" width="450" height="550"></p>
 
 <p>All is well so far. Next thing we need is a proxmark3 client. Building stuff
 for n900 is a bit painfull so I opted for <a href="http://wiki.maemo.org/Easy_Debian">debian chroot</a>. You can install debian
@@ -68,8 +74,9 @@ but just add them as you go):</p>
 
 
 <p>After you install all the required packages, building the client is as easy as running
-<code>make</code>. After the successful build, you should be able to run the proxmark3 client:
-<img src="http://ea.github.io/images/pm3.png"></p>
+<code>make</code>. After the successful build, you should be able to run the proxmark3 client:</p>
+
+<p><img src="http://ea.github.io/images/pm3.png" width="450" height="550"></p>
 
 <p>All this means I now have <a href="https://code.google.com/p/crapto1/">blacode (crapto1)</a> on my phone!</p>
 
@@ -87,16 +94,19 @@ in a regular root shell, not the debian chroot):</p>
 <p>After this, a ttyUSB0 device should be create which you can use to talk to the
 proxmark3 and we are done!</p>
 
-<p><img src="http://ea.github.io/images/ttyusb.png"></p>
+<p><img src="http://ea.github.io/images/ttyusb.png" width="450" height="550"></p>
 
-<p>Check if the antenna is working (atm I had only LF antenna attached):
-<img src="http://ea.github.io/images/lf.png"></p>
+<p>Check if the antenna is working (atm I had only LF antenna attached):</p>
+
+<p><img src="http://ea.github.io/images/lf.png" width="450" height="550"></p>
 
 <p>Hooray!!! I now have a very very portable very very neat RFID tool!
 Now to write some scripts to automate the tasks and all and we are all set.
-Small problem is that currently I can&rsquo;t plot :/
-<img src="http://ea.github.io/images/noplot.png">
-But I&rsquo;ll fix that soon too</p>
+Small problem is that currently I can&rsquo;t plot :/</p>
+
+<p><img src="http://ea.github.io/images/noplot.png" width="450" height="550"></p>
+
+<p>But I&rsquo;ll fix that soon too.</p>
 
 <p>Not sure how long the battery will hold (n900 is not famed for it&rsquo;s battery
 durability) but rough calculations tell me it will work for more than half an
@@ -119,6 +129,9 @@ routers being especially cheap and popular, I wanted to take a look.</p>
 
 <p>Long story short, <a href="http://www.devttys0.com/2013/10/from-china-with-love/">devttyS0 beat me to it and published another awsome backdoor</a>
 find. The backdoor is a bit more involved than the D-Link one. Awesome work!</p>
+
+<!--more-->
+
 
 <p>What follow are just some details on other firmware versions I got.</p>
 
@@ -317,6 +330,9 @@ driver or a middleware needs to be available. On the Windows platform, a smart c
 middleware must follow the <a href="http://msdn.microsoft.com/en-us/windows/hardware/gg487500.aspx">Windows Smart Card Minidriver specification</a> which is
 designed to present a consistent interface to the card. This is not always the case,
 and card vendors sometimes implement custom and non-standard interfaces.</p>
+
+<!--more-->
+
 
 <p>Since smart cards are designed to be tamper-resistant and secure, reverse
 engineering of the smart card itself can be time consuming and expensive so it
