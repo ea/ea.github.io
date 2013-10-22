@@ -1,0 +1,307 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>Proxmark3 on Nokia n900 - ea's blag</title>
+  <meta name="author" content="ea">
+
+  
+  <meta name="description" content="Ever since I got my Proxmark3 tool I wanted to make it portable.
+Of course, Proxmark3 has a standalone mode which means you can power it
+off of a USB &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://ea.github.io/blog/2013/10/22/proxmark3-on-nokia-n900">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="ea's blag" type="application/atom+xml">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/lib/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+
+  
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">ea's blag</a></h1>
+  
+    <h2>Too much technology, in too little time...</h2>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="https://encrypted.google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:ea.github.io" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+  <li><a href="/about">About</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">Proxmark3 on Nokia N900</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-10-22T10:09:00+02:00" pubdate data-updated="true">Oct 22<span>nd</span>, 2013</time>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><p>Ever since I got my <a href="http://proxmark3.com/">Proxmark3</a> tool I wanted to make it portable.
+Of course, Proxmark3 has a standalone mode which means you can power it
+off of a USB powerbank and operate it with its single button. This option
+is obviously limited and I wanted to be able to do more.</p>
+
+<p>On the other hand, I have a good old Nokia n900. The two seemed like a perfect
+pair. N900 doesn&rsquo;t support usb host mode out of the box, but latest firmware
+from the awesome maemo community and a couple of modules and tools does allow
+for n900 to act as a USB host. To enable the host mode, you&rsquo;d need to install
+H-E=N or host mode enabler GUI (the package is called hostmode-gui) which
+will in turn install kernel-power (so be careful unless you already have it).</p>
+
+<p>To actually connect anything to n900 in a host mode you&rsquo;d probably need some
+adapter to go from female micro USB to female type A USB port. I had a OTG cable
+lying around so I used that. But you could just use a female type A to female type A
+USB adapter which would be a cheaper option.
+<img src="/images/otg.png"></p>
+
+<p>Start H-E-N and select &ldquo;Full speed hostmode&rdquo; and turn VBUS boost on.
+Do note that running HEN will disable battery level monitoring so battery level
+indicator won&rsquo;t work.
+<img src="/images/hen.png"></p>
+
+<p>Now, when you connect the proxmark3 board, press &ldquo;Enumerate&rdquo; in HEN. This will
+enumerate all usb devices attached and make them available to the system. After
+enumeration, the LEDs on proxmark3 board should light up and you should hear the
+relay click. This means that the board is powered up.  Here&rsquo;s how my setup looks:
+<img src="/images/setup.png"></p>
+
+<p>If all goes well, you should now be able to see proxmark3 registered either via
+looking at <code>dmesg</code> or <code>lsusb</code> output.
+<img src="/images/dmesg.png"></p>
+
+<p>All is well so far. Next thing we need is a proxmark3 client. Building stuff
+for n900 is a bit painfull so I opted for <a href="http://wiki.maemo.org/Easy_Debian">debian chroot</a>. You can install debian
+chroot package from the repositories (it will take a while, the package is big)
+and by doing so get access to all the standard debian packages (most importantly
+for us, dev and build tools). After you&rsquo;ve installed debian chroot, to enter it
+from the terminal, just run <code>debian</code> as root. Go grab the <a href="https://code.google.com/p/proxmark3/">proxmark3 source</a>.
+You&rsquo;ll need few aditional packages listed at <a href="https://code.google.com/p/proxmark3/wiki/Linux">installation instructions</a> tho
+you can skip the devkitARM stuff as you probably don&rsquo;t want to build the OS and
+firmware on your phone. You&rsquo;d probably need to install a few development packages
+for the chroot env (probably a few more than listed, like automake,etc&hellip;
+but just add them as you go):</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>apt-get install subversion p7zip build-essential libreadline5 libreadline-dev libusb-0.1-4 libusb-dev perl pkg-config</span></code></pre></td></tr></table></div></figure>
+
+
+<p>After you install all the required packages, building the client is as easy as running
+<code>make</code>. After the successful build, you should be able to run the proxmark3 client:
+<img src="/images/pm3.png"></p>
+
+<p>To be able to talk to the proxmark3 board, you need it attached to a serial port.
+Easiest way to achieve that on the n900 is to install additional kernel modules
+which comes with <code>usbserial</code> module (additional kernel modules can be found in the
+repositories under the name <code>kernel-hostmode-modules</code> and <code>kernel-hostmode-modules-extra</code>).
+To load the usbserial module use <code>modprobe</code> with suitable arguments (NOTE: run modprobe
+in a regular root shell, not the debian chroot):</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>modprobe usbserial vendor=0x2d2d product=0x504d</span></code></pre></td></tr></table></div></figure>
+
+
+<p>After this, a ttyUSB0 device should be create which you can use to talk to the
+proxmark3 and we are done!</p>
+
+<p><img src="/images/ttyusb.png"></p>
+
+<p>Check if the antenna is working (atm I had only LF antenna attached):
+<img src="/images/lf.png"></p>
+
+<p>Hooray!!! I now have a very very portable very very neat RFID tool!
+Now to write some scripts to automate the tasks and all and we are all set.
+Small problem is that currently I can&rsquo;t plot :/
+<img src="/images/noplot.png">
+But I&rsquo;ll fix that soon too</p>
+
+<p>Not sure how long the battery will hold (n900 is not famed for it&rsquo;s battery
+durability) but rough calculations tell me it will work for more than half an
+hour which is enough for my needs.</p>
+
+<p>Have fun,</p>
+
+<p>ea</p>
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+<span class="byline author vcard">Posted by <span class="fn">ea</span></span>
+
+      
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-10-22T10:09:00+02:00" pubdate data-updated="true">Oct 22<span>nd</span>, 2013</time>
+      
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/2013/10/18/tenda-backdoor/" title="Previous Post: Tenda backdoor">&laquo; Tenda backdoor</a>
+      
+      
+    </p>
+  </footer>
+</article>
+
+</div>
+
+<aside class="sidebar">
+  
+    <section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2013/10/22/proxmark3-on-nokia-n900/">Proxmark3 on Nokia N900</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/10/18/tenda-backdoor/">Tenda Backdoor</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/09/15/reverse-engineering-smart-card-middleware/">Smart Card Middleware Reversing Tricks</a>
+      </li>
+    
+  </ul>
+</section>
+
+<section>
+  <h1>GitHub Repos</h1>
+  <ul id="gh_repos">
+    <li class="loading">Status updating...</li>
+  </ul>
+  
+  <a href="https://github.com/ea">@ea</a> on GitHub
+  
+  <script type="text/javascript">
+    $(document).ready(function(){
+        if (!window.jXHR){
+            var jxhr = document.createElement('script');
+            jxhr.type = 'text/javascript';
+            jxhr.src = '/javascripts/libs/jXHR.js';
+            var s = document.getElementsByTagName('script')[0];
+            s.parentNode.insertBefore(jxhr, s);
+        }
+
+        github.showRepos({
+            user: 'ea',
+            count: 10,
+            skip_forks: true,
+            target: '#gh_repos'
+        });
+    });
+  </script>
+  <script src="/javascripts/github.js" type="text/javascript"> </script>
+</section>
+
+
+
+
+
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2013 - ea -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+
+
+
+
+
+
+
+
+
+
+</body>
+</html>

@@ -4,7 +4,7 @@
   <title><![CDATA[ea's blag]]></title>
   <link href="http://ea.github.io/atom.xml" rel="self"/>
   <link href="http://ea.github.io/"/>
-  <updated>2013-10-18T17:41:32+02:00</updated>
+  <updated>2013-10-22T11:21:58+02:00</updated>
   <id>http://ea.github.io/</id>
   <author>
     <name><![CDATA[ea]]></name>
@@ -12,6 +12,99 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Proxmark3 on Nokia n900]]></title>
+    <link href="http://ea.github.io/blog/2013/10/22/proxmark3-on-nokia-n900/"/>
+    <updated>2013-10-22T10:09:00+02:00</updated>
+    <id>http://ea.github.io/blog/2013/10/22/proxmark3-on-nokia-n900</id>
+    <content type="html"><![CDATA[<p>Ever since I got my <a href="http://proxmark3.com/">Proxmark3</a> tool I wanted to make it portable.
+Of course, Proxmark3 has a standalone mode which means you can power it
+off of a USB powerbank and operate it with its single button. This option
+is obviously limited and I wanted to be able to do more.</p>
+
+<p>On the other hand, I have a good old Nokia n900. The two seemed like a perfect
+pair. N900 doesn&rsquo;t support usb host mode out of the box, but latest firmware
+from the awesome maemo community and a couple of modules and tools does allow
+for n900 to act as a USB host. To enable the host mode, you&rsquo;d need to install
+H-E=N or host mode enabler GUI (the package is called hostmode-gui) which
+will in turn install kernel-power (so be careful unless you already have it).</p>
+
+<p>To actually connect anything to n900 in a host mode you&rsquo;d probably need some
+adapter to go from female micro USB to female type A USB port. I had a OTG cable
+lying around so I used that. But you could just use a female type A to female type A
+USB adapter which would be a cheaper option.
+<img src="http://ea.github.io/images/otg.png"></p>
+
+<p>Start H-E-N and select &ldquo;Full speed hostmode&rdquo; and turn VBUS boost on.
+Do note that running HEN will disable battery level monitoring so battery level
+indicator won&rsquo;t work.
+<img src="http://ea.github.io/images/hen.png"></p>
+
+<p>Now, when you connect the proxmark3 board, press &ldquo;Enumerate&rdquo; in HEN. This will
+enumerate all usb devices attached and make them available to the system. After
+enumeration, the LEDs on proxmark3 board should light up and you should hear the
+relay click. This means that the board is powered up.  Here&rsquo;s how my setup looks:
+<img src="http://ea.github.io/images/setup.png"></p>
+
+<p>If all goes well, you should now be able to see proxmark3 registered either via
+looking at <code>dmesg</code> or <code>lsusb</code> output.
+<img src="http://ea.github.io/images/dmesg.png"></p>
+
+<p>All is well so far. Next thing we need is a proxmark3 client. Building stuff
+for n900 is a bit painfull so I opted for <a href="http://wiki.maemo.org/Easy_Debian">debian chroot</a>. You can install debian
+chroot package from the repositories (it will take a while, the package is big)
+and by doing so get access to all the standard debian packages (most importantly
+for us, dev and build tools). After you&rsquo;ve installed debian chroot, to enter it
+from the terminal, just run <code>debian</code> as root. Go grab the <a href="https://code.google.com/p/proxmark3/">proxmark3 source</a>.
+You&rsquo;ll need few aditional packages listed at <a href="https://code.google.com/p/proxmark3/wiki/Linux">installation instructions</a> tho
+you can skip the devkitARM stuff as you probably don&rsquo;t want to build the OS and
+firmware on your phone. You&rsquo;d probably need to install a few development packages
+for the chroot env (probably a few more than listed, like automake,etc&hellip;
+but just add them as you go):</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>apt-get install subversion p7zip build-essential libreadline5 libreadline-dev libusb-0.1-4 libusb-dev perl pkg-config</span></code></pre></td></tr></table></div></figure>
+
+
+<p>After you install all the required packages, building the client is as easy as running
+<code>make</code>. After the successful build, you should be able to run the proxmark3 client:
+<img src="http://ea.github.io/images/pm3.png"></p>
+
+<p>To be able to talk to the proxmark3 board, you need it attached to a serial port.
+Easiest way to achieve that on the n900 is to install additional kernel modules
+which comes with <code>usbserial</code> module (additional kernel modules can be found in the
+repositories under the name <code>kernel-hostmode-modules</code> and <code>kernel-hostmode-modules-extra</code>).
+To load the usbserial module use <code>modprobe</code> with suitable arguments (NOTE: run modprobe
+in a regular root shell, not the debian chroot):</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>modprobe usbserial vendor=0x2d2d product=0x504d</span></code></pre></td></tr></table></div></figure>
+
+
+<p>After this, a ttyUSB0 device should be create which you can use to talk to the
+proxmark3 and we are done!</p>
+
+<p><img src="http://ea.github.io/images/ttyusb.png"></p>
+
+<p>Check if the antenna is working (atm I had only LF antenna attached):
+<img src="http://ea.github.io/images/lf.png"></p>
+
+<p>Hooray!!! I now have a very very portable very very neat RFID tool!
+Now to write some scripts to automate the tasks and all and we are all set.
+Small problem is that currently I can&rsquo;t plot :/
+<img src="http://ea.github.io/images/noplot.png">
+But I&rsquo;ll fix that soon too</p>
+
+<p>Not sure how long the battery will hold (n900 is not famed for it&rsquo;s battery
+durability) but rough calculations tell me it will work for more than half an
+hour which is enough for my needs.</p>
+
+<p>Have fun,</p>
+
+<p>ea</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Tenda backdoor]]></title>
