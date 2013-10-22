@@ -58,6 +58,8 @@ After you install all the required packages, building the client is as easy as r
 `make`. After the successful build, you should be able to run the proxmark3 client:
 {% img /images/pm3.png %}
 
+All this means I now have [blacode (crapto1)][5] on my phone!
+
 To be able to talk to the proxmark3 board, you need it attached to a serial port. 
 Easiest way to achieve that on the n900 is to install additional kernel modules
 which comes with `usbserial` module (additional kernel modules can be found in the 
@@ -104,3 +106,4 @@ ea
 [2]: https://code.google.com/p/proxmark3/
 [3]: https://code.google.com/p/proxmark3/wiki/Linux
 [4]: http://wiki.maemo.org/Easy_Debian
+[5]: https://code.google.com/p/crapto1/
