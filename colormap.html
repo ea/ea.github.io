@@ -5,21 +5,67 @@
 <script>
 
 const img = new Image();
+var valmap = Array(255);
 
 function normalize(v){
  var range_min = document.getElementById("range_min").value;
  var range_max = document.getElementById("range_max").value;
- 
+
  return Math.max((v-range_min),0)/(range_max-range_min);
 
 
 }
 
+function guestimate_params(ctx){
+  var guess_factor = 1000;
+    for(var i=0; i< 256; i++){
+      valmap[i]=0;
+    }
+   // let ctx = document.getElementById("canvas").getContext("2d");
+   // ctx.canvas.width = window.innerWidth;
+    let data = ctx.getImageData(0, 0,ctx.canvas.width, ctx.canvas.height);
+    let px_x = ctx.canvas.width;
+    let px_y = ctx.canvas.height;
+    console.log(data.data);
+    for(var y = 0 ; y< px_y;y++){
+      for(var x=0;x<px_x;x++){
+        var px_val= data.data[y*4 * px_x+ x*4];
+        valmap[px_val]=valmap[px_val]+1;
+      }
+    }
+    console.log(valmap);
+    var min_guess=0;
+    for(var i =1; i< 256; i++){
+      if(valmap[i]>guess_factor){
+        min_guess = i;
+        break;
+      }
+    }
+    var max_guess=255;
+    for(var i = 255;i>0;i--){
+      if(valmap[i]>guess_factor){
+        max_guess =i;
+        break;
+      }
+    }
+
+    var mid = min_guess+(max_guess-min_guess)/2
+    document.getElementById("fudge_range").value = 128-mid;
+    document.getElementById("range_min").value = min_guess;
+    document.getElementById("range_max").value = max_guess;
+    console.log(document.getElementById("fudge_range").value);
+}
+
+function quantize(num){
+var q = document.getElementById("quantize").value;;
+return Math.round((num + Number.EPSILON) * q) / q
+
+}
 function makeMap(name) {
     var cmap = Array(255);
-    var fudge_range = (1. / 100.) * document.getElementById("fudge_range").value;
+    var fudge_range = (1. / 255.) * document.getElementById("fudge_range").value;
     for (var i = 0; i < 256; i++) {
-        cmap[i] = evaluate_cmap(Math.max(0, Math.min((normalize(i) + fudge_range), 1)), name, false);
+        cmap[i] = evaluate_cmap(quantize(Math.max(0, Math.min((normalize(i) + fudge_range), 1))), name, false);
         if (cmap[i] == NaN) cmap[i] = cmap[i - 1];
     }
 
@@ -35,9 +81,7 @@ function mapColor() {
     let nData = ctx.createImageData(data);
     let px_x = ctx.canvas.width;
     let px_y = ctx.canvas.height;
-
     var cmap = makeMap(document.getElementById("pallete_picker").value);
-
 
     let line_y = 4 * px_x;
 
@@ -104,6 +148,8 @@ function doImage() {
         const ctx = document.getElementById("canvas").getContext("2d");
         ctx.canvas.width = window.innerWidth;
         ctx.drawImage(img, 0, 0, ctx.canvas.width, ctx.canvas.width * img.height / img.width);
+    guestimate_params(ctx);
+
         mapColor();
 
     }
@@ -115,10 +161,10 @@ function doImage() {
 <body onload="onLoad()">
    <div style="position:relative;">
       <select id="pallete_picker" onchange="mapColor();"></select>
-      Shift:<input type="range" min="-50" max="50" value="-30" class="slider" id="fudge_range" oninput="mapColor();">
+      Shift:<input type="range" min="-127" max="128" value="0" class="slider" id="fudge_range" oninput="mapColor();">
       Min:<input type="range" min="0" max="255" value="0" class="slider" id="range_min" oninput="mapColor();">
       Max:<input type="range" min="0" max="255" value="255" class="slider" id="range_max" oninput="mapColor();">
-
+      Quantize:<input type="range" min="0" max="100" value="100" class="slider" id="quantize" oninput="mapColor();">
       <input type="file" id="file-selector" >
       <canvas width =2048 height = 2048 id = 'canvas' ></canvas>
    </div>
