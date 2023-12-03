@@ -1,0 +1,117 @@
+<html>
+
+  <script src="js-colormaps/js-colormaps.js"></script>
+
+<script>
+
+const img = new Image();
+
+
+function makeMap(name) {
+    var cmap = Array(255);
+    var fudge_range = (1. / 100.) * document.getElementById("fudge_range").value;
+    for (var i = 0; i < 256; i++) {
+        cmap[i] = evaluate_cmap(Math.max(0, Math.min(((1.0 / 255) * i + fudge_range), 1)), name, false);
+        if (cmap[i] == NaN) cmap[i] = cmap[i - 1];
+    }
+
+    return cmap;
+}
+
+function mapColor() {
+    let xx, yy;
+    ctx = document.getElementById("canvas").getContext("2d");
+    ctx.canvas.width = window.innerWidth;
+    ctx.drawImage(img, 0, 0, ctx.canvas.width, ctx.canvas.width * img.height / img.width);
+    let data = ctx.getImageData(0, 0, ctx.canvas.width, ctx.canvas.height);
+    let nData = ctx.createImageData(data);
+    let px_x = ctx.canvas.width;
+    let px_y = ctx.canvas.height;
+
+    var cmap = makeMap(document.getElementById("pallete_picker").value);
+
+
+    let line_y = 4 * px_x;
+
+    for (var i_y = 0; i_y < px_y; i_y++) {
+        for (var i_x = 0; i_x < px_x; i_x++) {
+
+
+            let nv = (0, 0, 0);
+            let cv = data.data[i_y * line_y + i_x * 4];
+            nv = cmap[cv];
+            nData.data[i_y * line_y + i_x * 4] = nv[0]; 
+            nData.data[i_y * line_y + i_x * 4 + 1] = nv[1];
+            nData.data[i_y * line_y + i_x * 4 + 2] = nv[2];
+            nData.data[i_y * line_y + i_x * 4 + 3] = data.data[i_y * line_y + i_x * 4 + 3];
+
+        }
+
+    }
+    ctx.putImageData(nData, 0, 0);
+
+}
+
+function readImage(file) {
+    if (file.type && !file.type.startsWith('image/')) {
+        console.log('File is not an image.', file.type, file);
+        return;
+    }
+
+    const reader = new FileReader();
+    reader.addEventListener('load', (event) => {
+        img.src = event.target.result;
+    });
+    reader.readAsDataURL(file);
+    document.getElementById("fudge_range").value=0;
+}
+
+
+function onLoad() {
+
+    const fileSelector = document.getElementById('file-selector');
+    fileSelector.addEventListener('change', (event) => {
+        const fileList = event.target.files;
+        console.log(fileList[0]);
+        readImage(fileList[0]);
+    });
+
+
+    var pallete_picker = document.getElementById("pallete_picker");
+    for (v in data) {
+        var option = document.createElement("option");
+        option.value = v;
+        option.text = v;
+        pallete_picker.appendChild(option);
+    }
+    pallete_picker.value = "turbo";
+    doImage();
+}
+
+function doImage() {
+
+    img.src = "result.jpg"; // Set source path
+
+    img.onload = () => {
+        const ctx = document.getElementById("canvas").getContext("2d");
+        ctx.canvas.width = window.innerWidth;
+        ctx.drawImage(img, 0, 0, ctx.canvas.width, ctx.canvas.width * img.height / img.width);
+        mapColor();
+
+    }
+}
+
+
+</script>
+ 
+<body onload="onLoad()">
+   <div style="position:relative;">
+      <select id="pallete_picker" onchange="mapColor();"></select>
+      <input type="range" min="-50" max="50" value="-30" class="slider" id="fudge_range" oninput="mapColor();">
+      <input type="file" id="file-selector" >
+      <canvas width =2048 height = 2048 id = 'canvas' ></canvas>
+   </div>
+
+
+</body>
+</html>
