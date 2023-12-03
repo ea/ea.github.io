@@ -6,12 +6,20 @@
 
 const img = new Image();
 
+function normalize(v){
+ var range_min = document.getElementById("range_min").value;
+ var range_max = document.getElementById("range_max").value;
+ 
+ return Math.max((v-range_min),0)/(range_max-range_min);
+
+
+}
 
 function makeMap(name) {
     var cmap = Array(255);
     var fudge_range = (1. / 100.) * document.getElementById("fudge_range").value;
     for (var i = 0; i < 256; i++) {
-        cmap[i] = evaluate_cmap(Math.max(0, Math.min(((1.0 / 255) * i + fudge_range), 1)), name, false);
+        cmap[i] = evaluate_cmap(Math.max(0, Math.min((normalize(i) + fudge_range), 1)), name, false);
         if (cmap[i] == NaN) cmap[i] = cmap[i - 1];
     }
 
@@ -107,7 +115,10 @@ function doImage() {
 <body onload="onLoad()">
    <div style="position:relative;">
       <select id="pallete_picker" onchange="mapColor();"></select>
-      <input type="range" min="-50" max="50" value="-30" class="slider" id="fudge_range" oninput="mapColor();">
+      Shift:<input type="range" min="-50" max="50" value="-30" class="slider" id="fudge_range" oninput="mapColor();">
+      Min:<input type="range" min="0" max="255" value="0" class="slider" id="range_min" oninput="mapColor();">
+      Max:<input type="range" min="0" max="255" value="255" class="slider" id="range_max" oninput="mapColor();">
+
       <input type="file" id="file-selector" >
       <canvas width =2048 height = 2048 id = 'canvas' ></canvas>
    </div>
